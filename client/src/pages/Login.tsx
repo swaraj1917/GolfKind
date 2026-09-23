@@ -57,7 +57,7 @@ function Login() {
             to="/"
             className="inline-flex items-center gap-2 text-2xl font-bold text-white"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-slate-950">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white">
               G
             </span>
             GolfKind
@@ -147,7 +147,7 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 font-semibold text-white transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? 'Logging in...' : 'Log In'}
 
