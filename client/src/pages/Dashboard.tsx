@@ -361,6 +361,11 @@ export default function Dashboard() {
 
     clearMessages()
 
+    if (!activeSubscription) {
+      setError('An active subscription is required to add or edit scores.')
+      return
+    }
+
     const numericScore = Number(scoreValue)
 
     if (!Number.isInteger(numericScore)) {
@@ -886,80 +891,101 @@ export default function Dashboard() {
               </div>
 
               <div className="p-6">
-                <form
-                  onSubmit={handleScoreSubmit}
-                  className="mb-6 grid gap-4 sm:grid-cols-[1fr_1fr_auto]"
-                >
-                  <div>
-                    <label
-                      htmlFor="score"
-                      className="mb-2 block text-sm font-medium text-slate-700"
-                    >
-                      Stableford score
-                    </label>
+                {!activeSubscription ? (
+                  <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <p className="text-sm font-semibold text-amber-900">
+                      Active subscription required
+                    </p>
 
-                    <input
-                      id="score"
-                      type="number"
-                      min="1"
-                      max="45"
-                      value={scoreValue}
-                      onChange={(event) =>
-                        setScoreValue(event.target.value)
-                      }
-                      placeholder="e.g. 34"
-                      className="w-full rounded-xl border border-[#d8e0d9] bg-white px-4 py-3 outline-none transition focus:border-[#356442] focus:ring-2 focus:ring-[#356442]/10"
-                    />
-                  </div>
+                    <p className="mt-1 text-sm text-amber-800">
+                      Please activate a GolfKind subscription before adding
+                      or editing scores.
+                    </p>
 
-                  <div>
-                    <label
-                      htmlFor="played-date"
-                      className="mb-2 block text-sm font-medium text-slate-700"
-                    >
-                      Played on
-                    </label>
-
-                    <input
-                      id="played-date"
-                      type="date"
-                      value={scoreDate}
-                      max={getToday()}
-                      onChange={(event) =>
-                        setScoreDate(event.target.value)
-                      }
-                      className="w-full rounded-xl border border-[#d8e0d9] bg-white px-4 py-3 outline-none transition focus:border-[#356442] focus:ring-2 focus:ring-[#356442]/10"
-                    />
-                  </div>
-
-                  <div className="flex items-end gap-2">
                     <button
-                      type="submit"
-                      disabled={saving}
-                      className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-[#244d32] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1d4029] disabled:cursor-not-allowed disabled:opacity-60"
+                      type="button"
+                      onClick={handleSubscribe}
+                      className="mt-3 rounded-lg bg-[#244d32] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1d4029]"
                     >
-                      {saving ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : editingScoreId ? (
-                        <Save className="h-4 w-4" />
-                      ) : (
-                        <Target className="h-4 w-4" />
-                      )}
-
-                      {editingScoreId ? 'Update' : 'Add score'}
+                      Subscribe now
                     </button>
-
-                    {editingScoreId && (
-                      <button
-                        type="button"
-                        onClick={cancelEditingScore}
-                        className="min-h-[48px] rounded-xl border border-[#d8e0d9] px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-                      >
-                        Cancel
-                      </button>
-                    )}
                   </div>
-                </form>
+                ) : (
+                  <form
+                    onSubmit={handleScoreSubmit}
+                    className="mb-6 grid gap-4 sm:grid-cols-[1fr_1fr_auto]"
+                  >
+                    <div>
+                      <label
+                        htmlFor="score"
+                        className="mb-2 block text-sm font-medium text-slate-700"
+                      >
+                        Stableford score
+                      </label>
+
+                      <input
+                        id="score"
+                        type="number"
+                        min="1"
+                        max="45"
+                        value={scoreValue}
+                        onChange={(event) =>
+                          setScoreValue(event.target.value)
+                        }
+                        placeholder="e.g. 34"
+                        className="w-full rounded-xl border border-[#d8e0d9] bg-white px-4 py-3 outline-none transition focus:border-[#356442] focus:ring-2 focus:ring-[#356442]/10"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="played-date"
+                        className="mb-2 block text-sm font-medium text-slate-700"
+                      >
+                        Played on
+                      </label>
+
+                      <input
+                        id="played-date"
+                        type="date"
+                        value={scoreDate}
+                        max={getToday()}
+                        onChange={(event) =>
+                          setScoreDate(event.target.value)
+                        }
+                        className="w-full rounded-xl border border-[#d8e0d9] bg-white px-4 py-3 outline-none transition focus:border-[#356442] focus:ring-2 focus:ring-[#356442]/10"
+                      />
+                    </div>
+
+                    <div className="flex items-end gap-2">
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="flex min-h-[48px] items-center justify-center gap-2 rounded-xl bg-[#244d32] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1d4029] disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {saving ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : editingScoreId ? (
+                          <Save className="h-4 w-4" />
+                        ) : (
+                          <Target className="h-4 w-4" />
+                        )}
+
+                        {editingScoreId ? 'Update' : 'Add score'}
+                      </button>
+
+                      {editingScoreId && (
+                        <button
+                          type="button"
+                          onClick={cancelEditingScore}
+                          className="min-h-[48px] rounded-xl border border-[#d8e0d9] px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  </form>
+                )}
 
                 {scores.length === 0 ? (
                   <div className="rounded-xl border border-dashed border-[#d8e0d9] bg-[#fafcf9] px-6 py-10 text-center">
@@ -1007,14 +1033,16 @@ export default function Dashboard() {
                         </div>
 
                         <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => startEditingScore(score)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-[#d8e0d9] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                            Edit
-                          </button>
+                          {activeSubscription && (
+                            <button
+                              type="button"
+                              onClick={() => startEditingScore(score)}
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-[#d8e0d9] px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                              Edit
+                            </button>
+                          )}
 
                           <button
                             type="button"
